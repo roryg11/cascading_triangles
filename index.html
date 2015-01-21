@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Cascading Triangle Fun</title>
+  <title>TWEENIFY</title>
   <link rel="stylesheet" href="styles.css">
   <script type="text/javascript" src="paper.js"></script>
   <script type="text/paperscript" canvas="canvas">
@@ -10,9 +10,9 @@
     // the segments have a random angle and random length(might just scale a bit)
     // segments start as white and fade to gray
     var triangles = [];
-    var randomNumber;
     var numTriangles = 50;
     var randomColorNumber;
+    var newTriangle;
 
     function randomNumberGenerator(){
       randomNumber = Math.floor(Math.random()* 100);
@@ -45,26 +45,44 @@
       randomColorNumber = '#'+ colorArray.join("");
     }
 
+    for(var i =0; i < 60; i++){
+      randomNumberGenerator();
+      randomColorNumGenerator();
+      randomPoint = new Point(900, 900) * Point.random();
+      newTriangle = new Path.RegularPolygon(randomPoint, 3, randomNumber);
+      newTriangle.strokeColor = randomColorNumber;
+      newTriangle.strokeWidth = 5;
+      triangles.push(newTriangle);
+      pathExists = true;
+    }
 
+    function onFrame(event){
+      for(var i =0; i< triangles.length; i++){
+        if(i % 2 === 0){
+          triangles[i].strokeColor.hue += 1;
+          triangles[i].rotate(1);
+          triangles[i].position.x += triangles[i].bounds.width/40;
+          if(triangles[i].bounds.left > view.size.width ){
+            triangles[i].position.x = -triangles[i].bounds.width;
+          }
+        }
+        else{
+          triangles[i].strokeColor.hue += 4;
+          triangles[i].rotate(2);
+          triangles[i].position.x += triangles[i].bounds.width/40;
+          if(triangles[i].bounds.left > view.size.width ){
+            triangles[i].position.x = -triangles[i].bounds.width;
+          }
+        }
 
-
-
-    function onMouseDown(event){
-      for(var i = 0; i < numTriangles; i++){
-        randomNumberGenerator();
-        randomPoint = new Point(900, 900) * Point.random();
-        triangle = new Path.RegularPolygon(randomPoint, 3, randomNumber);
-        triangle.strokeColor = 'white';
-        randomColorNumGenerator();
-        triangle.fillColor = randomColorNumber;
-        console.log(randomColorNumber);
-        triangles.push(triangle);
       }
     }
 
   </script>
 </head>
 <body>
-  <canvas id="canvas" resize hidpi="off" style="background:black"></canvas>
+  <div id="window">
+    <canvas id="canvas" height="300" width= "500" resize hidpi="off" style="background:black"></canvas>
+  </div>
 </body>
 </html>
